@@ -2,197 +2,309 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>客戶職稱快搜系統</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VIP 客戶通訊錄 App</title>
     <style>
+        :root {
+            --primary-color: #007aff;
+            --bg-color: #f2f2f7;
+            --card-bg: #ffffff;
+            --text-main: #1c1c1e;
+            --text-sub: #8e8e93;
+            --border-color: #e5e5ea;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Microsoft JhengHei';
-            background-color: #f4f7f6;
-            color: #333;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
             margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            padding: 0;
+            color: var(--text-main);
         }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 600px;
-        }
-        h1 {
+
+        /* 頂部導航列 */
+        .app-header {
+            background-color: var(--primary-color);
+            color: white;
             text-align: center;
-            color: #2c3e50;
-            margin-top: 0;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .search-box {
+
+        /* 搜尋區塊 */
+        .search-container {
+            background-color: var(--card-bg);
+            padding: 12px 16px;
             display: flex;
-            justify-content: center;
             gap: 10px;
-            margin-bottom: 20px;
+            position: sticky;
+            top: 53px;
+            z-index: 90;
+            border-bottom: 1px solid var(--border-color);
         }
+
         input[type="text"] {
-            width: 60%;
-            padding: 10px;
+            flex: 1;
+            padding: 12px 16px;
             font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border: 1px solid #c7c7cc;
+            border-radius: 10px;
             outline: none;
+            background-color: #f2f2f7;
+            transition: all 0.3s ease;
         }
+
         input[type="text"]:focus {
-            border-color: #3498db;
+            border-color: var(--primary-color);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
         }
+
         button {
-            padding: 10px 20px;
+            padding: 0 20px;
             font-size: 16px;
-            background-color: #3498db;
+            font-weight: 600;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.3s;
         }
-        button:hover {
-            background-color: #2980b9;
+
+        button:active {
+            background-color: #005bb5;
         }
-        #results {
-            margin-top: 20px;
+
+        /* 結果列表區 */
+        #results-container {
+            padding: 16px;
+            padding-bottom: 40px;
         }
-        .card {
-            background-color: #fdfdfd;
-            border-left: 5px solid #3498db;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .card h3 {
-            margin: 0 0 10px 0;
-            color: #2980b9;
-        }
-        .card p {
-            margin: 5px 0;
-            font-size: 15px;
-        }
+
         .status-msg {
             text-align: center;
-            color: #7f8c8d;
+            color: var(--text-sub);
+            font-size: 15px;
+            margin-top: 30px;
+        }
+
+        /* 聯絡人卡片樣式優化 */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            border-left: 6px solid var(--primary-color);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 12px;
+        }
+
+        .name-section h2 {
+            margin: 0;
+            font-size: 22px;
+            color: var(--text-main);
+        }
+
+        .title-badge {
+            display: inline-block;
+            background-color: #e5f1ff;
+            color: var(--primary-color);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-top: 6px;
+        }
+
+        .company-name {
+            font-size: 15px;
+            color: var(--text-sub);
+            font-weight: 500;
+            text-align: right;
+            max-width: 50%;
+        }
+
+        /* 詳細資料清單 */
+        .info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .info-list li {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        .info-list .icon {
+            margin-right: 10px;
             font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .info-list a {
+            color: var(--primary-color);
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .info-list a:active {
+            opacity: 0.7;
+        }
+        
+        .no-data {
+            color: #ccc;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>💼 客戶職稱快搜系統</h1>
-    <p style="text-align: center; color: #666;">請在下方自由輸入職稱關鍵字（例如：總經理、總監、協理、經理）</p>
-    
-    <div class="search-box">
-        <input type="text" id="keyword" placeholder="輸入職稱關鍵字..." onkeypress="handleKeyPress(event)">
+    <div class="app-header">
+        📇 VIP 客戶通訊錄 App
+    </div>
+
+    <div class="search-container">
+        <!-- 擴充搜尋功能：現在可以搜姓名、公司或職稱 -->
+        <input type="text" id="keyword" placeholder="搜尋姓名、公司或職稱" onkeypress="handleKeyPress(event)" inputmode="search">
         <button onclick="searchCustomers()">搜尋</button>
     </div>
 
-    <div id="results">
-        <p class="status-msg">等待搜尋中...請輸入關鍵字。</p>
+    <div id="results-container">
+        <p class="status-msg">請輸入關鍵字，例如「總監」、「家樂氏」或「王承先」🔍</p>
     </div>
-</div>
 
 <script>
-    // 內建客戶資料庫 (整理自名片資料)
+    // 資料庫已擴充為包含所有聯絡細節的完整結構
     const customers = [
-        // 高階經營主管
-        { company: "萬鮮股份有限公司", name: "王承先", title: "總經理" },
-        { company: "來來水產 / 元饌股份有限公司", name: "葉哲愷", title: "董事長" },
-        { company: "來來水產 / 元饌股份有限公司", name: "蔡來", title: "總經理" },
-        { company: "大得利家禽肉品 (益之豬)", name: "林明輝", title: "董事長" },
-        { company: "獅王家品股份有限公司", name: "三谷貴政", title: "董事總經理" },
-        { company: "紳宇實業股份有限公司", name: "林白庸", title: "總經理" },
-        { company: "紳宇實業股份有限公司", name: "高亨睿", title: "副總經理" },
-        { company: "宇閎實業 / 環穠企業", name: "顏穩境", title: "總經理" },
+        // ====== 高階決策層 ======
+        { company: "萬鮮股份有限公司", name: "王承先", title: "總經理", mobile: "-", phone: "04-2322-1868 ext.2801", email: "charles.wang@wowprime.com", address: "台中市西區五權路131號" },
+        { company: "饗城股份有限公司", name: "蔡澄秋", title: "總經理", mobile: "0975-057709", phone: "04-8965555 #201", email: "scmschairman@gmail.com", address: "彰化縣二林鎮東興里長青路300號" },
+        { company: "大得利家禽肉品(益之豬)", name: "林明輝", title: "董事長", mobile: "-", phone: "02-2206-6856", email: "-", address: "-" },
+        { company: "大武山牧場科技", name: "張哲銘", title: "董事長特助", mobile: "0986-193673", phone: "08-7871888 #252", email: "-", address: "屏東縣新埤鄉萬隆村平山路68-30號" },
+        { company: "台灣農畜產工業", name: "張華欣", title: "董事長", mobile: "-", phone: "02-2658-8511 #221", email: "harrisonc@tham.com.tw", address: "台北市內湖區陽光街321巷60號3樓" },
+        { company: "來來水產 / 元饌", name: "葉哲愷", title: "董事長", mobile: "-", phone: "02-2243-0128", email: "kaiyeh99@gmail.com", address: "新北市中和區連城路114號" },
+        { company: "來來水產 / 元饌", name: "蔡來", title: "總經理", mobile: "0978-315338", phone: "02-2243-0128 分機 207", email: "lailaifish@gmail.com", address: "新北市中和區連城路114號1樓" },
+        { company: "金龍冠 / 哈慕尼食品", name: "蕭堯焜", title: "執行長", mobile: "-", phone: "05-2215388", email: "0002@klgfood.com.tw", address: "嘉義縣民雄工業區中正路30號" },
+        { company: "獅王家品", name: "三谷貴政", title: "董事總經理", mobile: "-", phone: "02-8972-6500 #201", email: "mitani@lion-corp.com.tw", address: "新北市三重區重新路四段97號18樓之一" },
+        { company: "紳宇實業", name: "林白庸", title: "總經理", mobile: "-", phone: "02-2550-3138", email: "vince.l@oimo.com.tw", address: "台北市大同區承德路二段12號8樓之一" },
+        { company: "宇閎實業 / 環穠企業", name: "顏穩境", title: "總經理", mobile: "0938-660170", phone: "04-8855172", email: "urhome.tw@msa.hinet.net", address: "彰化縣溪湖鎮崙仔腳路2-15號" },
 
-        // 外商與跨國品牌主管
-        { company: "太古可口可樂", name: "鄒立仁", title: "業務暨行銷總監" },
-        { company: "香港商亞洲費列羅", name: "黃柏仁", title: "主要客戶計畫總監" },
-        { company: "香港商亞洲費列羅", name: "王明祿", title: "通路行銷主管" },
-        { company: "美商家樂氏", name: "李文瑋", title: "銷售總監" },
-        { company: "美商家樂氏", name: "湯銘暉", title: "業務經理-量販" },
-        { company: "聯合利華", name: "程怡禎", title: "台灣客戶發展總監" },
-        { company: "聯合利華", name: "胡俊翊", title: "主要客戶計劃副理" },
-        { company: "海尼根台灣", name: "周冠廷", title: "業務總監" },
-        { company: "台灣瑪氏", name: "高子雅", title: "業務協理" },
-        { company: "台灣雀巢", name: "梁紜籈", title: "主要客戶經理" },
-        { company: "台灣通用磨坊", name: "湯楷任", title: "主要客戶經理" },
-        { company: "英商赫力昂", name: "潘彥吟", title: "主要客戶經理" },
-        { company: "英商赫力昂", name: "李克宏", title: "通路經理" },
-        { company: "台灣樂天製菓", name: "江逢政", title: "通路經理" },
+        // ====== 外商與主要客戶主管 ======
+        { company: "香港商亞洲費列羅", name: "黃柏仁", title: "主要客戶計畫總監", mobile: "0919-387-295", phone: "02-2747-3883", email: "po-jen.huang@ferrero.com", address: "台北市松山區南京東路五段188號7樓9室" },
+        { company: "香港商亞洲費列羅", name: "王明祿", title: "通路行銷主管", mobile: "0955-123-005", phone: "02-2171-3806", email: "orson.wang@ferrero.com", address: "台北市松山區南京東路五段188號7樓9室" },
+        { company: "太古可口可樂", name: "鄒立仁", title: "業務暨行銷總監", mobile: "-", phone: "03-364-8800", email: "LarryTso@tw.swirecocacola.com", address: "桃園市桃園區興邦路46號" },
+        { company: "美商家樂氏", name: "李文瑋", title: "銷售總監", mobile: "0929-710-908", phone: "02-2656-7910", email: "Wilbert.Lee@kellanova.com", address: "台北市內湖區基湖路10巷1號7樓" },
+        { company: "美商家樂氏", name: "黃冠錡", title: "通路行銷主管", mobile: "0920-830-416", phone: "02-2656-7913", email: "Albert.Huang@kellanova.com", address: "台北市內湖區基湖路10巷1號7樓" },
+        { company: "美商家樂氏", name: "湯銘暉", title: "業務經理-量販", mobile: "0910-005-042", phone: "02-2659-7600", email: "Hannas.Tang@kellanova.com", address: "台北市內湖區基湖路10巷1號7樓" },
+        { company: "聯合利華", name: "程怡禎", title: "台灣客戶發展總監", mobile: "0920-458-126", phone: "02-8744-7746", email: "jaimie.cheng@unilever.com", address: "台北市大安區敦化南路2段39號15樓" },
+        { company: "聯合利華", name: "胡俊翊", title: "主要客戶計劃副理", mobile: "-", phone: "02-8744-7752", email: "harvey.hu@unilever.com", address: "台北市大安區敦化南路2段39號15樓" },
+        { company: "海尼根台灣", name: "周冠廷", title: "業務總監", mobile: "-", phone: "02-2722-5451 Ext. 203", email: "tim.chou@heineken.com", address: "台北市信義路四段458號23樓" },
+        { company: "台灣瑪氏", name: "高子雅", title: "業務協理", mobile: "0909-001-630", phone: "02-6616-6666 EXT. 8837", email: "Ivy.Kao@effem.com", address: "台北市南港區三重路19-11號15樓" },
+        { company: "台灣雀巢", name: "梁紜籈", title: "主要客戶經理", mobile: "0956-270-258", phone: "02-2773-9910 Ext. 9749", email: "Susan.Liang@tw.nestle.com", address: "台北市內湖區瑞光路399號8樓" },
+        { company: "台灣通用磨坊", name: "湯楷任", title: "主要客戶經理", mobile: "0919-938-026", phone: "02-8964-3599 Ext 3452", email: "Brian.Tang@genmills.com", address: "新北市板橋區中山路一段156號8樓" },
+        { company: "英商赫力昂 (Haleon)", name: "潘彥吟", title: "主要客戶經理", mobile: "0910-965-579", phone: "02-2312-6113", email: "chloe.x.pan@haleon.com", address: "台北市中正區忠孝西路一段66號24樓" },
+        { company: "英商赫力昂 (Haleon)", name: "李克宏", title: "通路經理", mobile: "0955-178-061", phone: "02-2312-6166", email: "leo.x.lee@haleon.com", address: "台北市中正區忠孝西路一段66號24樓" },
+        { company: "台灣樂天製菓", name: "江逢政", title: "通路經理", mobile: "0937-221-046", phone: "02-2578-8183 #210", email: "jerry_chiang@lottetaiwan.com.tw", address: "台北市松山區南京東路四段16號6樓A2" },
 
-        // 國內經銷、代理與食品企業
-        { company: "美淇食品 (凱文肉舖)", name: "高煥傑", title: "營業部協理" },
-        { company: "美淇食品 (凱文肉舖)", name: "邱瑞廷", title: "業務部經理" },
-        { company: "美淇食品 (凱文肉舖)", name: "林勝宥", title: "營業部副理" },
-        { company: "欣臨企業", name: "呂昆隆", title: "業務經理" },
-        { company: "欣臨企業", name: "高睿竹", title: "業務副理" },
-        { company: "寶貝國際 (BABI)", name: "黃秋香", title: "業務經理 (Sales Manager)" },
-        { company: "韓英國際 / 南喬", name: "陳永和", title: "業務經理" },
-        { company: "星禾國際", name: "吳柏翔", title: "業務經理" },
-        { company: "瑞盟行銷", name: "蔡濬安", title: "營業本部業務主談" },
-        { company: "佰研生化科技", name: "謝雅媚", title: "營業處副理" },
-        { company: "金蘭食品", name: "吳漢中", title: "北區營業課主任" }
+        // ====== 國內食品、代理經銷業務主管 ======
+        { company: "美淇食品 (凱文肉舖)", name: "高煥傑", title: "營業部協理", mobile: "0937-005673", phone: "02-29598399", email: "meyuan@ms36.hinet.net", address: "新北市板橋區干城路142號" },
+        { company: "美淇食品 (凱文肉舖)", name: "邱瑞廷", title: "業務部經理", mobile: "0953-001194", phone: "02-29598399", email: "meyuan@ms36.hinet.net", address: "新北市板橋區干城路142號" },
+        { company: "欣臨企業", name: "呂昆隆", title: "業務經理", mobile: "0920-307-786", phone: "02-2506-7777 #813", email: "kunlong_lu@thl.com.tw", address: "台北市南京東路三段70號4樓" },
+        { company: "欣臨企業", name: "高睿竹", title: "業務副理", mobile: "0939-981-702", phone: "02-2506-7777 #840", email: "benson_Kao@thl.com.tw", address: "台北市南京東路三段70號4樓" },
+        { company: "寶貝國際 (BABI)", name: "黃秋香", title: "業務經理", mobile: "0938-122-568", phone: "02-2391-8666 #23", email: "chris@babicorp.com", address: "台北市北平東路30號14樓之1" },
+        { company: "韓英國際 / 南喬", name: "陳永和", title: "業務經理", mobile: "0980-886090", phone: "02-5575-6797", email: "a0952091590@gmail.com", address: "新北市五股區五權八路39號" },
+        { company: "星禾國際", name: "吳柏翔", title: "業務經理", mobile: "0938-815-818", phone: "03-386-8282 #129", email: "sean-wu@shingher.com.tw", address: "桃園市大園區民生路104號" },
+        { company: "佰研生化科技", name: "謝雅媚", title: "營業處副理", mobile: "0939-422289", phone: "02-26557166 #372", email: "amy.hsieh@naturalbiokey.com", address: "台北市南港區園區街3號10樓之6" },
+        { company: "金蘭食品", name: "吳漢中", title: "北區營業課主任", mobile: "0935-738-818", phone: "03-380-1226 分機 730", email: "tp017@kimlan.com", address: "桃園市大溪區介壽路236號" },
+        { company: "花仙子企業", name: "陳正國", title: "執行長室資深顧問", mobile: "0932-190484", phone: "02-2592-2860", email: "David_Chen_gm@farcent.com.tw", address: "台北市大同區承德路3段230號13樓" },
+        { company: "瑞盟行銷", name: "蔡濬安", title: "營業本部業務主談", mobile: "0989-375-975", phone: "02-2509-2099 #258", email: "jimmy@bramen.com.tw", address: "台北市復興北路420號8樓" }
     ];
 
-    // 處理按 Enter 鍵搜尋
     function handleKeyPress(event) {
         if (event.key === "Enter") {
             searchCustomers();
+            document.getElementById("keyword").blur();
         }
     }
 
-    // 執行搜尋邏輯
     function searchCustomers() {
-        const keyword = document.getElementById("keyword").value.trim();
-        const resultsContainer = document.getElementById("results");
+        const keyword = document.getElementById("keyword").value.trim().toLowerCase();
+        const container = document.getElementById("results-container");
         
-        // 清空現有結果
-        resultsContainer.innerHTML = "";
+        container.innerHTML = "";
 
         if (keyword === "") {
-            resultsContainer.innerHTML = '<p class="status-msg">⚠️ 請輸入欲查詢的職稱！</p>';
+            container.innerHTML = '<p class="status-msg">⚠️ 請輸入姓名、公司或職稱進行搜尋</p>';
             return;
         }
 
-        // 過濾包含關鍵字的職稱
-        const filteredCustomers = customers.filter(customer => customer.title.includes(keyword));
+        // 擴充搜尋邏輯：比對姓名、公司與職稱
+        const filtered = customers.filter(c => 
+            c.title.toLowerCase().includes(keyword) || 
+            c.name.toLowerCase().includes(keyword) || 
+            c.company.toLowerCase().includes(keyword)
+        );
 
-        if (filteredCustomers.length === 0) {
-            resultsContainer.innerHTML = `<p class="status-msg">❌ 找不到職稱包含「<b>${keyword}</b>」的客戶。</p>`;
+        if (filtered.length === 0) {
+            container.innerHTML = `<p class="status-msg">找不到包含「<b>${keyword}</b>」的結果 ❌</p>`;
             return;
         }
 
-        // 顯示結果數量提示
-        const summaryMsg = document.createElement("p");
-        summaryMsg.innerHTML = `✅ 成功找到 <b>${filteredCustomers.length}</b> 位職稱包含「<b>${keyword}</b>」的聯絡人：`;
-        summaryMsg.style.color = "#27ae60";
-        summaryMsg.style.fontWeight = "bold";
-        resultsContainer.appendChild(summaryMsg);
+        const countMsg = document.createElement("p");
+        countMsg.innerHTML = `✅ 找到 <b>${filtered.length}</b> 位聯絡人：`;
+        countMsg.style.color = "#34c759";
+        countMsg.style.fontSize = "16px";
+        countMsg.style.fontWeight = "bold";
+        countMsg.style.margin = "0 0 16px 0";
+        container.appendChild(countMsg);
 
-        // 動態生成結果卡片
-        filteredCustomers.forEach(customer => {
+        // 生成高質感的詳細資料卡片
+        filtered.forEach(c => {
             const card = document.createElement("div");
             card.className = "card";
             
+            // 處理空值的顯示
+            const mobileHtml = c.mobile !== "-" ? `<a href="tel:${c.mobile}">${c.mobile}</a>` : `<span class="no-data">未提供</span>`;
+            const phoneHtml = c.phone !== "-" ? `<a href="tel:${c.phone}">${c.phone}</a>` : `<span class="no-data">未提供</span>`;
+            const emailHtml = c.email !== "-" ? `<a href="mailto:${c.email}">${c.email}</a>` : `<span class="no-data">未提供</span>`;
+
             card.innerHTML = `
-                <h3>🏢 ${customer.company}</h3>
-                <p>👤 <b>姓名：</b> ${customer.name}</p>
-                <p>💼 <b>職稱：</b> ${customer.title}</p>
+                <div class="card-header">
+                    <div class="name-section">
+                        <h2>${c.name}</h2>
+                        <div class="title-badge">${c.title}</div>
+                    </div>
+                    <div class="company-name">${c.company}</div>
+                </div>
+                <ul class="info-list">
+                    <li><span class="icon">📱</span> <span>行動：${mobileHtml}</span></li>
+                    <li><span class="icon">☎️</span> <span>市話：${phoneHtml}</span></li>
+                    <li><span class="icon">📧</span> <span>信箱：${emailHtml}</span></li>
+                    <li><span class="icon">📍</span> <span>地址：${c.address}</span></li>
+                </ul>
             `;
-            
-            resultsContainer.appendChild(card);
+            container.appendChild(card);
         });
     }
 </script>
-
 </body>
 </html>
